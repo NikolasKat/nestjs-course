@@ -5,8 +5,8 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 @Injectable()
 export class TaskService {
   private tasks = [
-    { id: 1, title: 'Learn Nest js', isCompleted: false },
-    { id: 2, title: 'Build new server', isCompleted: true },
+    { id: 1, tittle: 'Learn Nest js', isCompleted: false },
+    { id: 2, tittle: 'Build new server', isCompleted: true },
   ];
 
   findAll() {
@@ -24,11 +24,13 @@ export class TaskService {
   }
 
   createNewTask(dto: CreateTaskDto) {
-    const { tittle } = dto;
+    const { tittle, description, tags } = dto;
 
     const newTask = {
       id: this.tasks.length + 1,
-      title: tittle,
+      tittle,
+      description,
+      tags,
       isCompleted: false,
     };
 
@@ -42,7 +44,7 @@ export class TaskService {
 
     const task = this.findById(id);
 
-    task.title = tittle;
+    task.tittle = tittle;
     task.isCompleted = isCompleted;
 
     return task;
