@@ -1,43 +1,69 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Headers,
   Param,
   Post,
-  Query,
-  Req,
+  Put,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { MovieService } from './movie.service';
+import { CreateMovieDto } from './dto/create-movie.dto';
 
-@Controller('test')
+@Controller('movies')
 export class MovieController {
+  constructor(private readonly movieService: MovieService) {}
+
   @Get()
-  findAll(@Query() query: any) {
-    return `Films with queries: ${JSON.stringify(query)}`;
+  findAll() {
+    return this.movieService.findAll();
   }
 
   @Get(':id')
   findById(@Param('id') id: string) {
-    return { id };
+    return this.movieService.findById(+id);
   }
 
   @Post()
-  create(@Body('tittle') tittle: string) {
-    return `Tittle: "${tittle}" was added`;
+  create(@Body() dto: CreateMovieDto) {
+    return this.movieService.create(dto);
   }
 
-  @Get('headers')
-  getHeaders(@Headers('user-agent') headers: string) {
-    return headers;
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dto: CreateMovieDto) {
+    return this.movieService.update(+id, dto);
   }
 
-  @Get('req')
-  getRequest(@Req() req: Request) {
-    return {
-      method: req.method,
-      url: req.url,
-      query: req.query,
-    };
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.movieService.delete(+id);
   }
+  // @Get()
+  // findAll(@Query() query: any) {
+  //   return `Films with queries: ${JSON.stringify(query)}`;
+  // }
+
+  // @Get(':id')
+  // findById(@Param('id') id: string) {
+  //   return { id };
+  // }
+
+  // @Post()
+  // create(@Body('tittle') tittle: string) {
+  //   return `Tittle: "${tittle}" was added`;
+  // }
+
+  // @Get('headers')
+  // getHeaders(@Headers('user-agent') headers: string) {
+  //   return headers;
+  // }
+
+  // @Get('req')
+  // getRequest(@Req() req: Request) {
+  //   return {
+  //     method: req.method,
+  //     url: req.url,
+  //     query: req.query,
+  //   };
+  // }
 }
