@@ -1,24 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ReviewEntity } from "./entities/review.entity";
-import { Repository } from "typeorm";
+import { PrismaService } from "src/prisma/prisma.service";
 import { ReviewDto } from "./dto/create-review.dto";
-import { MovieService } from "src/movie/movie.service";
-
+import { Review } from "generated/prisma";
 @Injectable()
 export class ReviewService {
-  constructor(
-    @InjectRepository(ReviewEntity)
-    private readonly reviewRepository: Repository<ReviewEntity>,
-    private readonly movieService: MovieService,
-  ) {}
+   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(dto: ReviewDto): Promise<ReviewEntity> {
-    const { text, movieId, rating } = dto;
-    const movie = await this.movieService.findById(movieId);
+   async create(dto: ReviewDto): Promise<Review> {
+      const { text, movieId, rating } = dto;
 
-    const review = this.reviewRepository.create({ text, rating, movie });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const review = await this.prismaService.review.create({
+         data: { text, rating, movie: { connect: { id: movieId } } },
+      });
 
-    return await this.reviewRepository.save(review);
-  }
+      return review;
+   }
 }
