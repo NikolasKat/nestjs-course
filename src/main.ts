@@ -1,7 +1,8 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
-import { LoggingMiddleware } from "./common/middlewares/logger.middleware";
+import { logger } from "./common/middlewares/logger.middleware";
+import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 // import { AuthGuard } from "./common/guards/auth.guard";
 
 async function bootstrap() {
@@ -9,8 +10,9 @@ async function bootstrap() {
 
    app.useGlobalPipes(new ValidationPipe());
    // app.useGlobalGuards(new AuthGuard())
+   app.useGlobalInterceptors(new ResponseInterceptor());
 
-   app.use(LoggingMiddleware);
+   app.use(logger);
 
    //  app.setGlobalPrefix("api");
 

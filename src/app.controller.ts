@@ -27,6 +27,7 @@ export class AppController {
    }
 
    @UseGuards(AuthGuard)
+   // @UseInterceptors(ResponseInterceptor)
    @Get("@me")
    getProfile(@UserAgent() userAgent: string) {
       return {
