@@ -9,7 +9,6 @@ export class ActorService {
 
    async create(dto: ActorDto): Promise<Actor> {
       const { name } = dto;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const actor = await this.prismaService.actor.create({ data: { name } });
       return actor;
    }

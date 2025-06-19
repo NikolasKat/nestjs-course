@@ -1,12 +1,37 @@
-import { Controller, Get } from "@nestjs/common";
+import {
+   Body,
+   Controller,
+   Get,
+   Post,
+   UseGuards,
+   UsePipes,
+} from "@nestjs/common";
 import { AppService } from "./app.service";
+import { StringToLowercasePipe } from "./common/pipes/string-to-lowercase.pipe";
+import { AuthGuard } from "./common/guards/auth.guard";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+   @Get()
+   getHello(): string {
+      return this.appService.getHello();
+   }
+
+   @UsePipes(StringToLowercasePipe)
+   @Post()
+   create(@Body("tittle") tittle: string) {
+      return `Movie: ${tittle}`;
+   }
+
+   @UseGuards(AuthGuard)
+   @Get("@me")
+   getProfile() {
+      return {
+         id: 8,
+         name: "John",
+         age: 19,
+      };
+   }
 }
